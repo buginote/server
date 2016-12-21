@@ -1,4 +1,9 @@
 #!/bin/bash
+
+file="/root/servicedown.log"
+if [ ! -f "$file" ]; then
+  touch "$file"
+fi
  
 check1="fail2ban"
  
