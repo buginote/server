@@ -3,7 +3,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 export PATH
 
 apt-get update && apt-get upgrade -y
-pt-get -y install wget screen python
+apt-get -y install wget screen python
 
 #Change timezone to Shanghai
 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime -y
