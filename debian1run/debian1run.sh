@@ -3,7 +3,10 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 export PATH
 
 apt-get update && apt-get upgrade -y
-apt-get -y install wget screen python
+apt-get -y install wget vim
+
+#use my own vim conf,force cp without overwrite tip
+\cp vimrc /etc/vim/vimrc
 
 #Change timezone to Shanghai
 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime -y
