@@ -1,10 +1,13 @@
 #!/bin/bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
 
 file="/root/servicedown.log"
 if [ ! -f "$file" ]; then
   touch "$file"
 fi
- 
+
+#check fail2ban 
 check1="fail2ban"
  
 if pgrep "$check1" ; then
@@ -15,6 +18,7 @@ else
         echo 'error: fail2ban at ' $date > /root/servicedown.log
 fi
 
+#Check Ruisu
 check2="acce-3.10.61.0"
 
 if pgrep "$check2" ; then
