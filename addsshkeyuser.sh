@@ -68,7 +68,7 @@ fi
 echo -e "${SKYBLUE} New user name:     ${GREEN}"$COMMON_USER" ${PLAIN}"
 echo -e "${SKYBLUE} New user password: ${GREEN}"$COMMON_USER_PWD" ${PLAIN}"
 echo -e "${SKYBLUE} Old sshd_config backup to /etc/ssh/sshd_config.bak ${PLAIN}"
-echo -e "${RED} Copy the following private key & Save as ~/.ssh/id_rsa in local device ${PLAIN}"
+echo -e "${RED} Copy the following private key & Save as ~/.ssh/id_rsa in local device & chmod 600 ${PLAIN}"
 # 显示private key 
 cat /home/"$COMMON_USER"/.ssh/id_rsa
 
