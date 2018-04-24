@@ -37,6 +37,15 @@ read -p "Give new user SUDO permission? (Enter for no): " SUDOUSER
 # 创建一个普通新用户,并设好好密码及主目录
 useradd -d /home/"$COMMON_USER" -m -p "$COMMON_USER_PWD" "$COMMON_USER"
 mkdir /home/"$COMMON_USER"/.ssh
+
+# 创建密钥对
+ssh-keygen -b 1024 -t rsa -f /home/"$COMMON_USER"/.ssh/id_rsa
+# 给密钥及目录设置权限
+chmod 700 /home/"$COMMON_USER"/.ssh/
+cd /home/"$COMMON_USER"/.ssh/
+mv id_rsa.pub authorized_keys
+chmod 600 authorized_keys
+
 #将新的用户目录及其子目录下的所有文件所有者变为新添加的用户
 chown "$COMMON_USER":"$COMMON_USER" -R /home/"$COMMON_USER"
 
@@ -51,14 +60,6 @@ sed -i "s/#PubkeyAuthentication/PubkeyAuthentication/" /etc/ssh/sshd_config
 # 重启ssh服务
 echo -e "${SKYBLUE} Restart sshd service... ${PLAIN}"
 service sshd restart
-
-# 创建密钥对
-ssh-keygen -b 1024 -t rsa -f /home/"$COMMON_USER"/.ssh/id_rsa
-# 给密钥及目录设置权限
-chmod 700 /home/"$COMMON_USER"/.ssh/
-cd /home/"$COMMON_USER"/.ssh/
-mv id_rsa.pub authorized_keys
-chmod 600 authorized_keys
 
 if [ $SUDOUSER = "yes" ]; then
     apt-get install sudo && visudo
