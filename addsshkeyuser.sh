@@ -59,7 +59,7 @@ sed -i "s/#RSAAuthentication/RSAAuthentication/" /etc/ssh/sshd_config
 sed -i "s/#PubkeyAuthentication/PubkeyAuthentication/" /etc/ssh/sshd_config
 # 重启ssh服务
 echo -e "${SKYBLUE} Restart sshd service... ${PLAIN}"
-service sshd restart
+/etc/init.d/ssh restart
 
 if [ $SUDOUSER = "yes" ]; then
     apt-get install sudo && visudo
