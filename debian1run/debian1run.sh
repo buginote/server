@@ -161,10 +161,6 @@ sed -i "s/#PermitEmptyPasswords no/PermitEmptyPasswords no/g" /etc/ssh/sshd_conf
 # 不适用DNS
 sed -i  "s/#UseDNS yes/UseDNS no/g" /etc/ssh/sshd_config
 
-#Install fail2ban from lnmp
-wget -c https://github.com/licess/lnmp/blob/master/tools/fail2ban.sh && ./fail2ban.sh
-service sshd restart
-
 # ----------- 关闭系统中不需要的服务和端口 慎用,除非对现有所有服务一清二楚  -----------
 # echo -e "\e[1;36m 关闭系统中不需要的服务和端口 ... \e[0m"
 # for serv in `ls /etc/rc3.d/S*`
