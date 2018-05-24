@@ -20,7 +20,7 @@ if [ $(id -u) != "0" ]; then
 fi
 
 # ----------- 配置信息 -----------
-echo "Enter New User Name & Password & SSH Port, Make Sure To REMEMBER!! "
+echo "Enter New User Name & Password & SSH Port, Be Sure To REMEMBER!! "
 # 新用户的用户名
 read -p "Add a new user name: " COMMON_USER
 # 新用户的密码,不能少于8位
