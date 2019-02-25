@@ -42,10 +42,6 @@ apt-get -y install wget chkconfig vim screen
 # ----------- 账户安全设置 -----------
 echo -e "\e[1;36m 正在进行账户安全设置 ... \e[0m"
 
-# 创建一个普通新用户
-useradd -d /home/"$COMMON_USER" -m -p "$COMMON_USER_PWD" "$COMMON_USER"
-chown "$COMMON_USER" -R /home/"$COMMON_USER"
-
 # 禁用系统不需要的用户
 passwd -l xfs
 passwd -l news
@@ -82,14 +78,6 @@ groupdel games
 groupdel dip
 groupdel pppusers
 
-# 用chattr防止以下文件被修改
-chattr +i /etc/passwd
-chattr +i /etc/shadow
-chattr +i /etc/group
-chattr +i /etc/gshadow
-#给系统服务端口列表文件加锁,防止未经许可的删除或添加服务
-#chattr +i /etc/services
-
 # 限制su命令
 #sed -i "s/#auth  required  pam_wheel.so use_uid/auth  required  pam_wheel.so use_uid group=wheel/" /etc/pam.d/su
 #usermod -G10 $COMMON_USER
@@ -99,24 +87,9 @@ chattr +i /etc/gshadow
 # 禁止Ctrl+Alt+Delete重启命令
 #sed -i -e "s/\(^ca\:\:ctrlaltdel.*$\)/#\1/" /etc/inittab
 
-# 修改密码长度
-# sed -i -e 's/^PASS_MIN_LEN=.*/PASS_MIN_LEN=10/' /etc/login.defs
 # 提醒经常换密码
 #sed -i 's/^PASS_MAX_DAYS.*$/PASS_MAX_DAYS 90/g' /etc/login.defs
 #sed -i 's/^PASS_WARN_AGE.*$/PASS_WARN_AGE 10/g' /etc/login.defs
-
-# 设置密码连续输错3次后锁定5分钟
-# sed -i 's#auth required pam_env.so#auth required pam_env.so\nauth required pam_tally.so  onerr=fail deny=3 unlock_time=300\nauth required /lib/security/$ISA/pam_tally.so onerr=fail deny=3 unlock_time=300#' /etc/pam.d/system-auth
-
-# 5分钟后自动登出,防止非法关闭ssh客户端造成登录进程过多
-echo "TMOUT=300" >>/etc/profile
-# 历史命令记录数设定为10条
-# sed -i "s/HISTSIZE=1000/HISTSIZE=10/" /etc/profile
-# 让以上针对 /etc/profile 的改动立即生效
-source /etc/profile
-
-#重新设置 /etc/rc.d/init.d/ 目录下所有文件的许可权限,只有root用户可以操作
-chmod -R 700 /etc/rc.d/init.d/*
 
 # 限制重要命令的权限
 chmod 700 /bin/ping
@@ -140,26 +113,19 @@ chattr +i /root/.bash_history
 # ----------- SSH安全配置 -----------
 echo -e "\e[1;36m 进行SSH安全配置 ... \e[0m"
 
-chkconfig --list | grep sshd
-if [ $? -ne 0 ]; then
-    apt-get install ssh -y
-fi
-
 # 先备份
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+datename=$(date +%Y%m%d) 
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak.$datename
 
 # 改端口
 sed -i "s/#Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
 sed -i "s/Port 22/Port $SSH_PORT/" /etc/ssh/sshd_config
 
 # 不允许root用户直接登录
-sed -i "s/#PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config
+sed -i "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config
 # 不允许空密码登录
 sed -i "s/#PermitEmptyPasswords no/PermitEmptyPasswords no/g" /etc/ssh/sshd_config
-# 最多尝试次数,安装fail2ban则不用此项
-#sed -i "s/#MaxAuthTries 6/MaxAuthTries 5/g" /etc/ssh/sshd_config
-# 不适用DNS
-sed -i  "s/#UseDNS yes/UseDNS no/g" /etc/ssh/sshd_config
+sed -i "s/PermitEmptyPasswords yes/PermitEmptyPasswords no/g" /etc/ssh/sshd_config
 
 # ----------- 关闭系统中不需要的服务和端口 慎用,除非对现有所有服务一清二楚  -----------
 # echo -e "\e[1;36m 关闭系统中不需要的服务和端口 ... \e[0m"

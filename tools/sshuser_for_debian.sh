@@ -82,7 +82,8 @@ chown $COMMON_USER:$COMMON_USER -R /home/$COMMON_USER
 echo -e "${SKYBLUE} Change /etc/ssh/sshd_config settings to allow ssh-key login  ... ${PLAIN}"
 #echo -e "\e[1;36m Change /etc/ssh/sshd_config settings to allow  ... \e[0m"
 # 先备份
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+datename=$(date +%Y%m%d) 
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak.$datename
 # 打开ssh密钥登录功能
 sed -i "s/#RSAAuthentication/RSAAuthentication/" /etc/ssh/sshd_config
 sed -i "s/#PubkeyAuthentication/PubkeyAuthentication/" /etc/ssh/sshd_config
